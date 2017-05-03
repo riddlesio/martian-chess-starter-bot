@@ -16,6 +16,9 @@
 //    file that was distributed with this source code.
 
 package bot;
+import bot.model.ChessPieceColor;
+import bot.move.MartianChessMove;
+
 import java.util.Random;
 import java.util.Scanner;
 
@@ -35,6 +38,7 @@ public class BotParser {
     
     private Field mField;
     public static int mBotId = 0;
+    public static ChessPieceColor mColor = ChessPieceColor.WHITE;
 
     
     public BotParser(BotStarter bot) {
@@ -43,7 +47,7 @@ public class BotParser {
 	}
     
     public void run() {
-        mField = new Field(0, 0);
+        mField = new Field(4, 8);
         while(scan.hasNextLine()) {
             String line = scan.nextLine();
 
@@ -54,14 +58,8 @@ public class BotParser {
             String[] parts = line.split(" ");
             
             if(parts[0].equals("settings")) {
-                if (parts[1].equals("field_columns")) {
-                    mField.setColumns(Integer.parseInt(parts[2]));
-                }
-                if (parts[1].equals("field_rows")) {
-                    mField.setRows(Integer.parseInt(parts[2]));
-                }
-                if (parts[1].equals("your_botid")) {
-                    mBotId = Integer.parseInt(parts[2]);
+                if (parts[1].equals("your_color")) {
+                    mColor = parts[2].equals("white") ? ChessPieceColor.WHITE : ChessPieceColor.BLACK;
                 }
             } else if(parts[0].equals("update")) { /* new field data */
                 if (parts[2].equals("field")) {
@@ -70,8 +68,8 @@ public class BotParser {
                 }
             } else if(parts[0].equals("action")) {
                 if (parts[1].equals("move")) { /* move requested */
-                    int column = bot.makeTurn();
-                    System.out.println("place_disc " + column);
+                    MartianChessMove move = bot.makeTurn();
+                    System.out.println("move " + move.toString());
                 }
             }
             else { 

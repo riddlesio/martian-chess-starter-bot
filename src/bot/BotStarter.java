@@ -16,6 +16,10 @@
 //    file that was distributed with this source code.
 
 package bot;
+import bot.move.MartianChessMove;
+
+import java.awt.*;
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -24,7 +28,7 @@ import java.util.Random;
  * Magic happens here. You should edit this file, or more specifically
  * the makeTurn() method to make your bot do more than random moves.
  * 
- * @author Jim van Eeden <jim@starapple.nl>, Joost de Meij <joost@starapple.nl>
+ * @author Jim van Eeden <jim@starapple.nl>, Joost <joost@starapple.nl>
  */
 
 public class BotStarter {	
@@ -33,11 +37,16 @@ public class BotStarter {
      /**
       * Makes a turn. Edit this method to make your bot smarter.
       *
-      * @return The column where the turn was made.
+      * @return A MartianChessMove
       */
-     public int makeTurn() {
-         int move = new Random().nextInt(7);     
-         return move;
+     public MartianChessMove makeTurn() {
+         ArrayList<MartianChessMove> moves = new ArrayList<>();
+         MartianChessMove move = new MartianChessMove(new Point(1,1), new Point(2,2));
+
+         moves.add(move);
+
+         Random RNG = new Random();
+         return moves.get(RNG.nextInt(moves.size()));
      }
      
  	public static void main(String[] args) {

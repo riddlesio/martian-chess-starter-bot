@@ -21,169 +21,80 @@ package bot;
  * 
  * Field class that contains the field status data and various helper functions.
  * 
- * @author Jim van Eeden <jim@starapple.nl>, Joost de Meij <joost@starapple.nl>
+ * @author Jim van Eeden <jim@starapple.nl>, Joost <joost@starapple.nl>
  */
 
-public class Field {	
-	private int[][] mBoard;
-	private int mCols = 0, mRows = 0;
-	private String mLastError = "";
-	public int mLastColumn = 0;
-	
-	public Field(int columns, int rows) {
-		mBoard = new int[columns][rows];
-		mCols = columns;
-		mRows = rows;
-		clearBoard();
-	}
-	
-	/**
-	 * Sets the number of columns (this clears the board)
-	 * @param args : int cols
-	 */
-	public void setColumns(int cols) {
-		mCols = cols;
-		mBoard = new int[mCols][mRows];
+public class Field {
+
+	private int myId;
+	private int width;
+	private int height;
+	private String[][] field;
+
+	public Field(int w, int h) {
+		this.width = w;
+		this.height = h;
+		field = new String[w][h];
 	}
 
 	/**
-	 * Sets the number of rows (this clears the board)
-	 * @param args : int rows
+	 * Initializes and clears field
+	 * @throws Exception exception
 	 */
-	public void setRows(int rows) {
-		mRows = rows;
-		mBoard = new int[mCols][mRows];
+	public void initField() throws Exception {
+		try {
+			this.field = new String[this.width][this.height];
+		} catch (Exception e) {
+			throw new Exception("Error: trying to initialize field while field "
+					+ "settings have not been parsed yet.");
+		}
+
+		clearField();
 	}
 
 	/**
-	 * Clear the board
+	 * Clears the field
 	 */
-	public void clearBoard() {
-		for (int x = 0; x < mCols; x++) {
-			for (int y = 0; y < mRows; y++) {
-				mBoard[x][y] = 0;
+	private void clearField() {
+		for (int y = 0; y < this.height; y++) {
+			for (int x = 0; x < this.width; x++) {
+				this.field[x][y] = ".";
 			}
 		}
 	}
-	
+
 	/**
-	 * Adds a disc to the board
-	 * @param args : command line arguments passed on running of application
-	 * @return : true if disc fits, otherwise false
-	 */
-	public Boolean addDisc(int column, int disc) {
-		mLastError = "";
-		if (column < mCols) {
-			for (int y = mRows-1; y >= 0; y--) { // From bottom column up
-				if (mBoard[column][y] == 0) {
-					mBoard[column][y] = disc;
-					mLastColumn = column;
-					return true;
-				}
-			}
-			mLastError = "Column is full.";
-		} else {
-			mLastError = "Move out of bounds.";
-		}
-		return false;
-	}
-	
-	/**
-	 * Initialise field from comma separated String
-	 * @param String : 
+	 * Parse field from comma separated String
+	 * @param s input from engine
 	 */
 	public void parseFromString(String s) {
-		s = s.replace(';', ',');
-		String[] r = s.split(",");
-		int counter = 0;
-		for (int y = 0; y < mRows; y++) {
-			for (int x = 0; x < mCols; x++) {
-				mBoard[x][y] = Integer.parseInt(r[counter]); 
-				counter++;
+		clearField();
+
+		String[] split = s.split(",");
+		int x = 0;
+		int y = 0;
+
+		for (String value : split) {
+			this.field[x][y] = value;
+
+			if (++x == this.width) {
+				x = 0;
+				y++;
 			}
 		}
 	}
-	
-	/**
-	 * Returns the current piece on a given column and row
-	 * @param args : int column, int row
-	 * @return : int
-	 */
-	public int getDisc(int column, int row) {
-		return mBoard[column][row];
+
+	public void setMyId(int id) {
+		this.myId = id;
 	}
-	
-	/**
-	 * Returns whether a slot is open at given column
-	 * @param args : int column
-	 * @return : Boolean
-	 */
-	public Boolean isValidMove(int column) {
-		return (mBoard[column][0] == 0);
+
+	public void setWidth(int w) {
+		this.width = w;
+		field = new String[width][height];
 	}
-	
-	/**
-	 * Returns reason why addDisc returns false
-	 * @param args : 
-	 * @return : reason why addDisc returns false
-	 */
-	public String getLastError() {
-		return mLastError;
-	}
-	
-	@Override
-	/**
-	 * Creates comma separated String with every cell.
-	 * @param args : 
-	 * @return : String
-	 */
-	public String toString() {
-		String r = "";
-		int counter = 0;
-		for (int y = 0; y < mRows; y++) {
-			for (int x = 0; x < mCols; x++) {
-				if (counter > 0) {
-					r += ",";
-				}
-				r += mBoard[x][y];
-				counter++;
-			}
-		}
-		return r;
-	}
-	
-	/**
-	 * Checks whether the field is full
-	 * @return : Returns true when field is full, otherwise returns false.
-	 */
-	public boolean isFull() {
-		for (int x = 0; x < mCols; x++)
-		  for (int y = 0; y < mRows; y++)
-		    if (mBoard[x][y] == 0)
-		      return false; // At least one cell is not filled
-		// All cells are filled
-		return true;
-	}
-	
-	/**
-	 * Checks whether the given column is full
-	 * @return : Returns true when given column is full, otherwise returns false.
-	 */
-	public boolean isColumnFull(int column) {
-		return (mBoard[column][0] != 0);
-	}
-	
-	/**
-	 * @return : Returns the number of columns in the field.
-	 */
-	public int getNrColumns() {
-		return mCols;
-	}
-	
-	/**
-	 * @return : Returns the number of rows in the field.
-	 */
-	public int getNrRows() {
-		return mRows;
+
+	public void setHeight(int h) {
+		this.height = h;
+		field = new String[width][height];
 	}
 }
