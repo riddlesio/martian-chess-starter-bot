@@ -16,9 +16,12 @@ public class MartianChessBoard {
     public MartianChessPiece[][] fields;
 
 
-    public MartianChessBoard(int width, int height) {
+    public MartianChessBoard(int w, int h) {
 
+        width = w;
+        height = h;
         fields = new MartianChessPiece[width][height];
+
         clear();
     }
 
@@ -125,5 +128,14 @@ public class MartianChessBoard {
 
     public MartianChessPiece[][] getFields() {
         return fields;
+    }
+
+    public void dump() {
+        for(int y = 0; y < this.height; y++) {
+            for(int x = 0; x < this.width; x++) {
+                System.out.print(getStringFromFrield(fields[x][y]));
+            }
+            System.out.print("\n");
+        }
     }
 }

@@ -16,7 +16,11 @@
 //    file that was distributed with this source code.
 
 package bot;
+import bot.model.MartianChessBoard;
+import bot.model.MartianChessPiece;
+import bot.model.ValidationResult;
 import bot.move.MartianChessMove;
+import bot.validator.MartianChessMoveValidator;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -32,21 +36,41 @@ import java.util.Random;
  */
 
 public class BotStarter {	
-     Field field;
 
      /**
       * Makes a turn. Edit this method to make your bot smarter.
       *
       * @return A MartianChessMove
       */
-     public MartianChessMove makeTurn() {
+     public MartianChessMove makeTurn(MartianChessBoard board) {
          ArrayList<MartianChessMove> moves = new ArrayList<>();
-         MartianChessMove move = new MartianChessMove(new Point(1,1), new Point(2,2));
 
-         moves.add(move);
 
+
+         MartianChessPiece piece = board.getFieldAt(new Point(1,1));
+         board.dump();
+
+         for (int x = 0; x < 4; x++) {
+             for (int y = 0; y < 8; y++) {
+                 MartianChessMove move = new MartianChessMove(new Point(1, 6), new Point(x, y));
+
+                 MartianChessMoveValidator validator = new MartianChessMoveValidator();
+                 ValidationResult result = validator.validate(move, board);
+                 if (result.isValid()) {
+                     moves.add(move);
+                 }
+             }
+         }
+
+
+
+
+         System.out.println("Found " + moves.size() + " moves. ");
          Random RNG = new Random();
-         return moves.get(RNG.nextInt(moves.size()));
+         if (moves.size() > 0) {
+             return moves.get(RNG.nextInt(moves.size()));
+         }
+         return new MartianChessMove(new Point(1, 1), new Point(2, 2));
      }
      
  	public static void main(String[] args) {

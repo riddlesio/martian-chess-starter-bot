@@ -17,6 +17,7 @@
 
 package bot;
 import bot.model.ChessPieceColor;
+import bot.model.MartianChessBoard;
 import bot.move.MartianChessMove;
 
 import java.util.Random;
@@ -36,7 +37,7 @@ public class BotParser {
 	final Scanner scan;
     final BotStarter bot;
     
-    private Field mField;
+    private MartianChessBoard mBoard;
     public static int mBotId = 0;
     public static ChessPieceColor mColor = ChessPieceColor.WHITE;
 
@@ -47,7 +48,7 @@ public class BotParser {
 	}
     
     public void run() {
-        mField = new Field(4, 8);
+        mBoard = new MartianChessBoard(4, 8);
         while(scan.hasNextLine()) {
             String line = scan.nextLine();
 
@@ -64,11 +65,11 @@ public class BotParser {
             } else if(parts[0].equals("update")) { /* new field data */
                 if (parts[2].equals("field")) {
                     String data = parts[3];
-                    mField.parseFromString(data); /* Parse Field with data */
+                    mBoard.setFieldsFromString(data); /* Parse Field with data */
                 }
             } else if(parts[0].equals("action")) {
                 if (parts[1].equals("move")) { /* move requested */
-                    MartianChessMove move = bot.makeTurn();
+                    MartianChessMove move = bot.makeTurn(mBoard);
                     System.out.println("move " + move.toString());
                 }
             }
