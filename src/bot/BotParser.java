@@ -69,7 +69,7 @@ public class BotParser {
                 }
             } else if(parts[0].equals("action")) {
                 if (parts[1].equals("move")) { /* move requested */
-                    MartianChessMove move = bot.makeTurn(mBoard);
+                    MartianChessMove move = bot.makeTurn(mBoard, mColor);
                     System.out.println("move " + move.toString());
                 }
             }

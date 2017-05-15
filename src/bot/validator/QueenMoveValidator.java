@@ -39,10 +39,6 @@ public class QueenMoveValidator extends ChessPieceMoveValidator implements MoveV
         if (!straightMove && !diagonalMove)
             isValid = false;
 
-
-
-
-
         if (isValid) {
             return new ValidationResult(true, "");
         }

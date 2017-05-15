@@ -16,6 +16,7 @@
 //    file that was distributed with this source code.
 
 package bot;
+import bot.model.ChessPieceColor;
 import bot.model.MartianChessBoard;
 import bot.model.MartianChessPiece;
 import bot.model.ValidationResult;
@@ -42,40 +43,44 @@ public class BotStarter {
       *
       * @return A MartianChessMove
       */
-     public MartianChessMove makeTurn(MartianChessBoard board) {
+     public MartianChessMove makeTurn(MartianChessBoard board, ChessPieceColor color) {
+
          ArrayList<MartianChessMove> moves = new ArrayList<>();
-
-
-
-         MartianChessPiece piece = board.getFieldAt(new Point(1,1));
-         board.dump();
+         int startY = (color == ChessPieceColor.BLACK) ? 0 : 3;
 
          for (int x = 0; x < 4; x++) {
-             for (int y = 0; y < 8; y++) {
-                 MartianChessMove move = new MartianChessMove(new Point(1, 6), new Point(x, y));
-
-                 MartianChessMoveValidator validator = new MartianChessMoveValidator();
-                 ValidationResult result = validator.validate(move, board);
-                 if (result.isValid()) {
-                     moves.add(move);
-                 }
+             for (int y = startY; y < startY + 4; y++) {
+                 moves.addAll(getMoves(board, x, y));
              }
          }
 
-
-
-
-         System.out.println("Found " + moves.size() + " moves. ");
          Random RNG = new Random();
          if (moves.size() > 0) {
              return moves.get(RNG.nextInt(moves.size()));
          }
          return new MartianChessMove(new Point(1, 1), new Point(2, 2));
      }
+
+    private ArrayList<MartianChessMove> getMoves(MartianChessBoard board, int pieceX, int pieceY) {
+
+        ArrayList<MartianChessMove> moves = new ArrayList<>();
+
+        for (int x = 0; x < 4; x++) {
+            for (int y = 0; y < 8; y++) {
+                MartianChessMove move = new MartianChessMove(new Point(pieceX, pieceY), new Point(x, y));
+
+                MartianChessMoveValidator validator = new MartianChessMoveValidator();
+                ValidationResult result = validator.validate(move, board);
+                if (result.isValid()) {
+                    moves.add(move);
+                }
+            }
+        }
+        return moves;
+    }
      
  	public static void main(String[] args) {
  		BotParser parser = new BotParser(new BotStarter());
  		parser.run();
  	}
- 	
  }

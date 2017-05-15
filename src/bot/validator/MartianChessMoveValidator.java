@@ -45,11 +45,10 @@ public final class MartianChessMoveValidator implements MoveValidator<MartianChe
     @Override
     public ValidationResult validate(MartianChessMove move, MartianChessBoard board) {
 
-        //get the piece at the from location
+        // get the piece at the from location
         Point from = move.getFrom();
         MartianChessPiece fromPiece = board.getFieldAt(from);
 
-        boolean result = true;
         for (MoveValidator validator : validators) {
             if (validator.isApplicable(move, board)) {
                 ValidationResult vr = validator.validate(move, board);
@@ -58,16 +57,6 @@ public final class MartianChessMoveValidator implements MoveValidator<MartianChe
                 }
             }
         }
-
-
-        /*
-        if (validator != null) {
-            ValidationResult result = validator.validate(move, state);
-            if (!result.isValid()) {
-                return result;
-            }
-        }
-        */
         return new ValidationResult(true, "Ok");
     }
 

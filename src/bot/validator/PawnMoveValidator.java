@@ -27,7 +27,6 @@ public class PawnMoveValidator extends ChessPieceMoveValidator implements MoveVa
     public ValidationResult validate(MartianChessMove move, MartianChessBoard board) {
 
         // Pawns move one space diagonally in any direction. (Unlike chess pawns, they may move backwards.)
-
         Point from = move.getFrom();
         Point to = move.getTo();
 
